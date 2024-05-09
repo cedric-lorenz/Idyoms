@@ -957,6 +957,7 @@ function gen_seq_inc(seed::Int,
     E::Escape,
     U::Bool,
     O::OrderBound,
+    ViewType::Type,
     tally::Tally{T,T}=emptytally(T, T),
     seen::Set{T}=Set{T}()) where {T}
 
@@ -976,6 +977,10 @@ function gen_seq_inc(seed::Int,
         # UPDATE SEQUENCE
         push!(preds, p)
         push!(seq, p.symbol)
+
+        # UPDATE VIEW
+        elements = ViewType(collect(zip(seq, seq)))
+        v = Idyoms.View(elements)
 
         # UPDATE NGRAM TALLY
         updatetally(tally, getngram(v, i)...)
